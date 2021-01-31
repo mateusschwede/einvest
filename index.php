@@ -15,11 +15,23 @@
             $_SESSION['msg'] = null;
             header("location: analista/index.php");
         } else if($r2->rowCount()>0) {
-            session_start();
-            $_SESSION['nome'] = $_POST['nome'];
-            $_SESSION['senha'] = $_POST['senha'];
-            $_SESSION['msg'] = null;
-            header("location: cliente/index.php");
+            $r = $db->prepare("SELECT email FROM cliente WHERE nome=? AND senha=?");
+            $r->execute(array($_POST['nome'],$_POST['senha']));
+            $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+            foreach($linhas as $l) {$email = $l['email'];}
+            if($email == null) {
+                session_start();
+                $_SESSION['nome'] = $_POST['nome'];
+                $_SESSION['senha'] = $_POST['senha'];
+                $_SESSION['msg'] = null;
+                header("location: cliente/primeiroAcesso.php");
+            } else {
+                session_start();
+                $_SESSION['nome'] = $_POST['nome'];
+                $_SESSION['senha'] = $_POST['senha'];
+                $_SESSION['msg'] = null;
+                header("location: cliente/index.php");
+            }
         } else {$msg = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Dado(s) incorreto(s)!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";}
     }
 ?>

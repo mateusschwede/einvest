@@ -12,7 +12,7 @@ CREATE TABLE cliente (
     cpf VARCHAR(11) NOT NULL,
     nome VARCHAR(60),
     email VARCHAR(60),
-    celular VARCHAR(11),
+    telefone VARCHAR(11),
     senha VARCHAR(5)
 );
 INSERT INTO cliente(cpf,nome,email,celular,senha) VALUES ("00000000000","cliente x","cliente@outlook.com","51999415233","12345");

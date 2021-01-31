@@ -3,12 +3,12 @@
     session_start();
     if((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
 
-    if( (!empty($_POST['cpf'])) and (!empty($_POST['senha'])) ) {
+    if( (!empty($_POST['cpf'])) and (!empty($_POST['nome'])) and (!empty($_POST['senha'])) ) {
         $r = $db->prepare("SELECT cpf FROM cliente WHERE cpf=?");
         $r->execute(array($_POST['cpf']));
         if($r->rowCount()==0) {
-            $r = $db->prepare("INSERT INTO cliente(cpf,senha) VALUES (?,?)");
-            $r->execute(array($_POST['cpf'],$_POST['senha']));
+            $r = $db->prepare("INSERT INTO cliente(cpf,nome,senha) VALUES (?,?,?)");
+            $r->execute(array($_POST['cpf'],$_POST['nome'],$_POST['senha']));
             $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Cliente Cpf ".$_POST['cpf']." adicionado!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
             header("location: index.php");
         } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Cliente já existente!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: index.php");}
@@ -53,6 +53,9 @@
             <form action="addCliente.php" method="post">
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="cpf (somente números)" required name="cpf" pattern="\d{11}">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="nome" required name="nome" maxlength="60" style="text-transform:lowercase;">
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="senha temporária" required name="senha" maxlength="5" style="text-transform:lowercase;">
