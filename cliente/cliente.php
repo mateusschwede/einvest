@@ -51,6 +51,7 @@
                         <p><b>Email</b>: ".$l['email']."</p>
                         <p><b>Telefone</b>: ".$l['telefone']."</p>
                         <p><b>Senha</b>: ".$l['senha']."</p>
+                        <a href='index.php' class='btn btn-secondary'>Voltar</a>
                         <a href='edCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-warning'>Editar informações</a>
                         <a href='remCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-danger btn-sm'>Excluir conta</a>
                     ";
