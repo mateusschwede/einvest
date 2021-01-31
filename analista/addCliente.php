@@ -39,7 +39,7 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout">Logout</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout">An. <?=$_SESSION['nome']?>-logout</a></li>
                         </ul>
                     </div>
                 </div>

@@ -27,8 +27,8 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="cliente.php">Perfil</a></li>
+                            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="cliente.php">Perfil</a></li>
                             <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout"><?=$_SESSION['nome']?>-logout</a></li>
                         </ul>
                     </div>
@@ -39,8 +39,23 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h1>Carteiras de <?=$_SESSION['nome']?></h1>
-            <a href="addCarteira.php" class="btn btn-primary">Adicionar carteira</a>
+            <h1>Perfil de <?=$_SESSION['nome']?></h1>
+            <?php
+                $r = $db->prepare("SELECT * FROM cliente WHERE nome=? AND senha=?");
+                $r->execute(array($_SESSION['nome'],$_SESSION['senha']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {
+                    echo "
+                        <p><b>Cpf</b>: ".$l['cpf']."</p>
+                        <p><b>Nome</b>: ".$l['nome']."</p>
+                        <p><b>Email</b>: ".$l['email']."</p>
+                        <p><b>Telefone</b>: ".$l['telefone']."</p>
+                        <p><b>Senha</b>: ".$l['senha']."</p>
+                        <a href='edCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-warning'>Editar informações</a>
+                        <a href='remCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-danger btn-sm'>Excluir conta</a>
+                    ";
+                }
+            ?>
         </div>
     </div>
 
