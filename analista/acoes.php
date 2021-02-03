@@ -54,7 +54,7 @@
                             <p><b>Nome:</b> ".$l['nome']."</p>
                             <p><b>Atividade:</b> ".$l['atividade']."</p>
                             <p><b>Setor:</b> ".$l['setor']."</p>
-                            <p><b>Pregão:</b> R$ ".number_format($l['preco'],2,',','')."</p>
+                            <p><b>Pregão:</b> R$ ".number_format($l['preco'],2,'.','')."</p>
                             <a href='edAcao.php?id=".base64_encode($l['id'])."' class='btn btn-warning btn-sm'>Editar</a>
                             <a href='canCliente.php?id=".base64_encode($l['id'])."' class='btn btn-danger btn-sm'>Excluir</a>
                             <hr>

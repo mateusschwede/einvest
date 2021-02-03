@@ -2,6 +2,19 @@
     require_once "../conect.php";
     session_start();
     if((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+
+    if( (!empty($_POST['cnpj'])) and (!empty($_POST['nome'])) and (!empty($_POST['atividade'])) and (!empty($_POST['setor'])) and (!empty($_POST['preco'])) ) {
+        $r = $db->prepare("SELECT id FROM acao WHERE cnpj=?");
+        $r->execute(array($_POST['cnpj']));;
+
+        if($r->rowCount()==0) {
+            $pregao = number_format($_POST['preco'],2);
+            $r = $db->prepare("INSERT INTO acao(cnpj,nome,atividade,setor,preco) VALUES (?,?,?,?,?)");
+            $r->execute(array($_POST['cnpj'],$_POST['nome'],$_POST['atividade'],$_POST['setor'],$pregao));
+            $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Ação Cnpj ".$_POST['cnpj']." adicionada!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+            header("location: acoes.php");
+        } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Ação já existente!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: acoes.php");}
+    }
 ?>
 
 <!DOCTYPE html>
@@ -48,16 +61,16 @@
                     <input type="text" class="form-control" placeholder="nome" required name="nome" maxlength="60" style="text-transform:lowercase;">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="atividade" required name="aividade" maxlength="60" style="text-transform:lowercase;">
+                    <input type="text" class="form-control" placeholder="atividade" required name="atividade" maxlength="60" style="text-transform:lowercase;">
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="setor" required name="setor" maxlength="60" style="text-transform:lowercase;">
                 </div>
                 <div class="mb-3">
-                    <input type="number" class="form-control" name="moeda" lang="en" min=0 step="0.01" required placeholder="pregão">
+                    <input type="text" class="form-control" required name="preco" pattern="\d{1,3}\.\d{2}" placeholder="pregão">
                     <div class="form-text">Use ponto ao invés de vírgula</div>
                 </div>
-                <button type="button" class="btn btn-danger" onclick="window.location.href='index.php'">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="window.location.href='acoes.php'">Cancelar</button>
                 <button type="submit" class="btn btn-success">Confirmar</button>
             </form>
         </div>
