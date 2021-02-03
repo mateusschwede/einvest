@@ -41,4 +41,4 @@ CREATE TABLE carteira_acao (
     idAcao INT NOT NULL,
     percentual INT NOT NULL
 );
-INSERT INTO carteira_acao(idCarteira,idAcao,percentual) VALUES (1,1,100);
+INSERT INTO carteira_acao(idCarteira,idAcao,percentual) VALUES (1,1,90);

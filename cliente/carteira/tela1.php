@@ -25,7 +25,7 @@
                 $_SESSION['cpfCliente'] = $cpf;
                 foreach($linhas as $l) {$_SESSION['idCarteira'] = $l['id'];}
                 header("location: tela2.php");
-            } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Nome de carteira já existente no sistema!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: ../index.php");}
+            } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Nome de carteira já existe no sistema!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: ../index.php");}
         } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Nenhuma ação cadastrada no sistema!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: ../index.php");}
     }
 ?>
