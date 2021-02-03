@@ -60,7 +60,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12 text-center">
+        <div class="col-sm-12">
             <h1>Editar analista</h1>
             <form action="edAnalista.php?id=<?=$id?>" method="post">
                 <div class="mb-3">

@@ -2,6 +2,20 @@
     require_once "../conect.php";
     session_start();
     if((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+
+
+    if( (!empty($_POST['remAcao'])) and (!empty($_GET['idVelho'])) ) {        
+        $r = $db->prepare("SELECT idAcao FROM carteira_acao WHERE idAcao=?");
+        $r->execute(array($_GET['idVelho']));
+        
+        if ($r->rowCount()==0) {
+            $r = $db->prepare("DELETE FROM acao WHERE id=?");
+            $r->execute(array($_GET['idVelho']));
+            $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Ação ".$_GET['idVelho']." removida!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+            header("location: acoes.php");
+        } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Ação cadastrada em carteira!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: acoes.php");}
+
+    }
 ?>
 
 <!DOCTYPE html>
@@ -39,29 +53,12 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h1>Ações</h1>
-            <a href="addAcao.php" class="btn btn-primary">Adicionar ação</a>
-            <?php
-                if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;}
-
-                $r = $db->query("SELECT * FROM acao");
-                if($r->rowCount()>0) {
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <p><b>Cód:</b> ".$l['id']."</p>
-                            <p><b>Cnpj:</b> ".$l['cnpj']."</p>
-                            <p><b>Nome:</b> ".$l['nome']."</p>
-                            <p><b>Atividade:</b> ".$l['atividade']."</p>
-                            <p><b>Setor:</b> ".$l['setor']."</p>
-                            <p><b>Pregão:</b> R$ ".number_format($l['preco'],2,'.','')."</p>
-                            <a href='edAcao.php?id=".base64_encode($l['id'])."' class='btn btn-warning btn-sm'>Editar</a>
-                            <a href='remAcao.php?id=".base64_encode($l['id'])."' class='btn btn-danger btn-sm'>Excluir</a>
-                            <hr>
-                        ";
-                    }
-                } else {echo "<p class='text-muted'>Não há clientes pendetes</p>";}
-            ?>
+            <h1>Remover ação <?=base64_decode($_GET['id'])?>?</h1>
+            <form action="remAcao.php?idVelho=<?=base64_decode($_GET['id'])?>" method="post">
+                <input type="hidden" name="remAcao" value=1>
+                <button type="button" class="btn btn-danger" onclick="window.location.href='acoes.php'">Cancelar</button>
+                <button type="submit" class="btn btn-success">Confirmar</button>
+            </form>
         </div>
     </div>
 
