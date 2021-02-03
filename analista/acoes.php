@@ -27,8 +27,8 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="acoes.php">Ações</a></li>
+                            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="acoes.php">Ações</a></li>
                             <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout">An. <?=$_SESSION['nome']?>-logout</a></li>
                         </ul>
                     </div>
@@ -39,23 +39,24 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h1>Espaço do analista</h1>
-            <a href="remAnalista.php" class="btn btn-danger">Excluir perfil</a>
-            <a href="edAnalista.php" class="btn btn-warning">Editar perfil</a>
-            <a href="addCliente.php" class="btn btn-primary">Pré-cadastrar cliente</a>
-            <h3>Clientes pendetes</h3>
+            <h1>Ações</h1>
+            <a href="addAcao.php" class="btn btn-primary">Adicionar ação</a>
             <?php
                 if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;}
 
-                $r = $db->query("SELECT * FROM cliente WHERE email IS null");
+                $r = $db->query("SELECT * FROM acao");
                 if($r->rowCount()>0) {
                     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                     foreach($linhas as $l) {
                         echo "
-                            <p><b>Cpf:</b> ".$l['cpf']."</p>
+                            <p><b>Cód:</b> ".$l['id']."</p>
+                            <p><b>Cnpj:</b> ".$l['cnpj']."</p>
                             <p><b>Nome:</b> ".$l['nome']."</p>
-                            <p><b>Senha:</b> ".$l['senha']."</p>
-                            <a href='canCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-danger btn-sm'>Excluir</a>
+                            <p><b>Atividade:</b> ".$l['atividade']."</p>
+                            <p><b>Setor:</b> ".$l['setor']."</p>
+                            <p><b>Pregão:</b> R$ ".number_format($l['preco'],2,',','')."</p>
+                            <a href='edAcao.php?id=".base64_encode($l['id'])."' class='btn btn-warning btn-sm'>Editar</a>
+                            <a href='canCliente.php?id=".base64_encode($l['id'])."' class='btn btn-danger btn-sm'>Excluir</a>
                             <hr>
                         ";
                     }

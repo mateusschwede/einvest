@@ -2,17 +2,6 @@
     require_once "../conect.php";
     session_start();
     if((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
-
-    if( (!empty($_POST['cpf'])) and (!empty($_POST['nome'])) and (!empty($_POST['senha'])) ) {
-        $r = $db->prepare("SELECT cpf FROM cliente WHERE cpf=?");
-        $r->execute(array($_POST['cpf']));
-        if($r->rowCount()==0) {
-            $r = $db->prepare("INSERT INTO cliente(cpf,nome,senha) VALUES (?,?,?)");
-            $r->execute(array($_POST['cpf'],$_POST['nome'],$_POST['senha']));
-            $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Cliente Cpf ".$_POST['cpf']." adicionado!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
-            header("location: index.php");
-        } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Cliente já existente!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: index.php");}
-    }
 ?>
 
 <!DOCTYPE html>
@@ -38,8 +27,8 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="acoes.php">Ações</a></li>
+                            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="acoes.php">Ações</a></li>
                             <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout">An. <?=$_SESSION['nome']?>-logout</a></li>
                         </ul>
                     </div>
@@ -50,16 +39,23 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h1>Novo cliente</h1>
-            <form action="addCliente.php" method="post">
+            <h1>Nova ação</h1>
+            <form action="addAcao.php" method="post">
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="cpf (somente números)" required name="cpf" pattern="\d{11}">
+                    <input type="text" class="form-control" placeholder="cnpj (somente números)" required name="cnpj" pattern="\d{12}">
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="nome" required name="nome" maxlength="60" style="text-transform:lowercase;">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="senha temporária" required name="senha" maxlength="5" style="text-transform:lowercase;">
+                    <input type="text" class="form-control" placeholder="atividade" required name="aividade" maxlength="60" style="text-transform:lowercase;">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="setor" required name="setor" maxlength="60" style="text-transform:lowercase;">
+                </div>
+                <div class="mb-3">
+                    <input type="number" class="form-control" name="moeda" lang="en" min=0 step="0.01" required placeholder="pregão">
+                    <div class="form-text">Use ponto ao invés de vírgula</div>
                 </div>
                 <button type="button" class="btn btn-danger" onclick="window.location.href='index.php'">Cancelar</button>
                 <button type="submit" class="btn btn-success">Confirmar</button>
