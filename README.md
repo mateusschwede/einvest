@@ -23,4 +23,3 @@ Finalizar: SUM(percentuais)=100
 
 ## Bugs e Fazer:
 - Erro ao calcular o precoPercentual por ação em carteira de ações (cliente/index.php)
-- Fazer Excluir Cliente (Se há carteiras, não pd excluir)

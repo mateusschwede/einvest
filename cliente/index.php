@@ -38,7 +38,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-8">
             <?php if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;} ?>
             <h1>Carteiras de <?=$_SESSION['nome']?></h1>
             <a href="carteira/tela1.php" class="btn btn-primary">Adicionar carteira</a>
@@ -82,6 +82,26 @@
                     }
                 } else {echo "<p class='text-muted'>Não há carteiras cadastradas</p>";}
             ?>
+        </div>
+
+
+        <div class="col-sm-4">
+            <div class="accordion" id="listaAcoes">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="lista1">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Ver todas ações</button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="lista1" data-bs-parent="#listaAcoes">
+                        <div class="accordion-body">
+                            <?php
+                                $r = $db->query("SELECT codigo,nome,preco FROM acao ORDER BY codigo");
+                                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                                foreach($linhas as $l) {echo "<p>(".strtoupper($l['codigo']).") ".$l['nome'].": R$ ".number_format($l['preco'],2)."</p>";}
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

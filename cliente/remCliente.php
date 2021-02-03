@@ -2,6 +2,21 @@
     require_once "../conect.php";
     session_start();
     if((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+
+    if(!empty($_POST['remCliente'])) {
+        $r = $db->prepare("SELECT cpf FROM cliente WHERE nome=? AND senha=?");
+        $r->execute(array($_SESSION['nome'],$_SESSION['senha']));
+        $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+        foreach($linhas as $l) {$cpf = $l['cpf'];}
+
+        $r = $db->prepare("SELECT cpfCliente FROM carteira WHERE cpfCliente=?");
+        $r->execute(array($cpf));
+        if($r->rowCount()==0) {
+            $r = $db->prepare("DELETE FROM cliente WHERE nome=? AND senha=?");
+            $r->execute(array($_SESSION['nome'],$_SESSION['senha']));
+            header("location: ../logout.php");
+        } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Cliente ainda possui Carteiras existentes!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: cliente.php");}
+    }
 ?>
 
 <!DOCTYPE html>
@@ -28,8 +43,8 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="cliente.php">Perfil</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout"><?=$_SESSION['nome']?>-logout</a></li>
+                            <li class="nav-item"><a class="nav-link" href="acoes.php">Ações</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../logout.php" id="logout">An. <?=$_SESSION['nome']?>-logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -39,26 +54,12 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h1>Perfil de <?=$_SESSION['nome']?></h1>
-            <?php
-                if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;}
-
-                $r = $db->prepare("SELECT * FROM cliente WHERE nome=? AND senha=?");
-                $r->execute(array($_SESSION['nome'],$_SESSION['senha']));
-                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                foreach($linhas as $l) {
-                    echo "
-                        <p><b>Cpf</b>: ".$l['cpf']."</p>
-                        <p><b>Nome</b>: ".$l['nome']."</p>
-                        <p><b>Email</b>: ".$l['email']."</p>
-                        <p><b>Telefone</b>: ".$l['telefone']."</p>
-                        <p><b>Senha</b>: ".$l['senha']."</p>
-                        <a href='index.php' class='btn btn-secondary'>Voltar</a>
-                        <a href='edCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-warning'>Editar informações</a>
-                        <a href='remCliente.php?cpf=".base64_encode($l['cpf'])."' class='btn btn-danger btn-sm'>Excluir conta</a>
-                    ";
-                }
-            ?>
+            <h1>Remover cliente <?=$_SESSION['nome']?>?</h1>
+            <form action="remCliente.php" method="post">
+                <input type="hidden" name="remCliente" value=1>
+                <button type="button" class="btn btn-danger" onclick="window.location.href='cliente.php'">Cancelar</button>
+                <button type="submit" class="btn btn-success">Confirmar</button>
+            </form>
         </div>
     </div>
 
