@@ -68,14 +68,14 @@
                         $r->execute(array($l['idAcao']));
                         $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                         foreach($linhas as $l) {$nomeAcao = $l['nome']; $preco = number_format($l['preco'],2);}
+                        
+                        echo "
+                            <p><b>".$l['nome']."(R$ ".$preco."):</b> ".$percentual."% (R$ ".$precoPercentual.")</p>
+                            <a href='edAcaoCarteira.php?idAcao=".base64_encode($l['id'])."' class='btn btn-warning btn-sm'>Editar</a>
+                            <a href='remAcaoCarteira.php?idAcao=".base64_encode($l['id'])."' class='btn btn-danger btn-sm'>Excluir</a>
+                            <hr>
+                        ";
                     }
-
-                    echo "
-                        <p><b>".$l['nome']."(R$ ".$preco."):</b> ".$percentual."% (R$ ".$precoPercentual.")</p>
-                        <a href='edAcaoCarteira?idAcao=".base64_encode($l['id'])."' class='btn btn-warning btn-sm'>Editar</a>
-                        <a href='remAcaoCarteira?idAcao=".base64_encode($l['id'])."' class='btn btn-danger btn-sm'>Editar</a>
-                        <hr>
-                    ";
                 } else {echo "<p class='text-muted'>Nenhuma ação cadastrada</p>";}
             ?>
             
