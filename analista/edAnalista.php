@@ -70,7 +70,7 @@
                     <input type="text" class="form-control" placeholder="senha" required name="novaSenha" maxlength="5" style="text-transform:lowercase;" value="<?=$senha?>">
                 </div>
                 <button type="button" class="btn btn-danger" onclick="window.location.href='index.php'">Cancelar</button>
-                <button type="submit" class="btn btn-success">Atualizar</button>
+                <button type="submit" class="btn btn-success">Confirmar</button>
             </form>
             <?php if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;}?>
         </div>
