@@ -7,6 +7,8 @@
     $r->execute(array($_SESSION['nome'],$_SESSION['senha']));
     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
     foreach($linhas as $l) {
+        $nome = $l['nome'];
+        $senha = $l['senha'];
         $cpf = $l['cpf'];
         $email = $l['email'];
         $telefone = $l['telefone'];
@@ -17,10 +19,10 @@
         $r->execute(array($_POST['nNome'],$_POST['nSenha'],$cpf));
         if($r->rowCount()==0) {
             $r = $db->prepare("UPDATE cliente SET nome=?,email=?,telefone=?,senha=? WHERE cpf=?");
-            $r->execute(array($_POST['nNome']),$_POST['nEmail'],$_POST['nTelefone'],$_POST['nSenha'],$cpf);
+            $r->execute(array($_POST['nNome'],$_POST['nEmail'],$_POST['nTelefone'],$_POST['nSenha'],$_GET['cpf']));
             $_SESSION['nome'] = $_POST['nNome'];
             $_SESSION['senha'] = $_POST['nSenha'];
-            $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Cliente ".$nome." atualizado!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+            $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Cliente ".$_POST['nNome']." atualizado!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
             header("location: index.php");
         } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Nome e senha já existentes!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: index.php");}
     }
@@ -64,16 +66,16 @@
             <h1>Editar <?=$_SESSION['nome']?></h1>
             <form action="edCliente.php?cpf=<?=$cpf?>" method="post">
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="nome" required name="nNome" maxlength="60" style="text-transform:lowercase;" value="<?=$_SESSION['nome']?>">
+                    <input type="text" class="form-control" placeholder="nome" required name="nNome" maxlength="60" style="text-transform:lowercase;" value="<?=$nome?>">
                 </div>
                 <div class="mb-3">
                     <input type="email" class="form-control" placeholder="email" required name="nEmail" maxlength="60" style="text-transform:lowercase;" value="<?=$email?>">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="telefone (51)99999-2828" required name="nTelefone" pattern="\([0-9]{2}\)[0-9]{4,5}-[0-9]{4}" value="<?=$telefone?>">
+                    <input type="text" class="form-control" placeholder="telefone (somente números)" required name="nTelefone" pattern="\d{11}" value="<?=$telefone?>">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="senha" required name="nSenha" maxlength="5" style="text-transform:lowercase;" value="<?=$_SESSION['senha']?>">
+                    <input type="text" class="form-control" placeholder="senha" required name="nSenha" maxlength="5" style="text-transform:lowercase;" value="<?=$senha?>">
                 </div>
                 <button type="button" class="btn btn-danger" onclick="window.location.href='index.php'">Cancelar</button>
                 <button type="submit" class="btn btn-success">Atualizar</button>

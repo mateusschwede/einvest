@@ -47,7 +47,7 @@
                     <input type="email" class="form-control" placeholder="email" required name="email" maxlength="60" style="text-transform:lowercase;">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="telefone (51)99999-2828" required name="telefone" pattern="\([0-9]{2}\)[0-9]{4,5}-[0-9]{4}">
+                    <input type="text" class="form-control" placeholder="telefone (somente números)" required name="telefone" pattern="\d{11}">
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="nova senha" required name="novaSenha" maxlength="5" style="text-transform:lowercase;" value="<?=$_SESSION['senha']?>">

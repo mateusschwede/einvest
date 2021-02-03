@@ -39,6 +39,7 @@
 
     <div class="row">
         <div class="col-sm-12">
+            <?php if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;} ?>
             <h1>Carteiras de <?=$_SESSION['nome']?></h1>
             <a href="addCarteira.php" class="btn btn-primary">Adicionar carteira</a>
         </div>
