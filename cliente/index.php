@@ -41,7 +41,47 @@
         <div class="col-sm-12">
             <?php if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;} ?>
             <h1>Carteiras de <?=$_SESSION['nome']?></h1>
-            <a href="addCarteira.php" class="btn btn-primary">Adicionar carteira</a>
+            <a href="carteira/tela1.php" class="btn btn-primary">Adicionar carteira</a>
+
+            <?php
+                $r = $db->prepare("SELECT cpf FROM cliente WHERE nome=? AND senha=?");
+                $r->execute(array($_SESSION['nome'],$_SESSION['senha']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {$cpf = $l['cpf'];}
+
+                $r = $db->prepare("SELECT * FROM carteira WHERE cpfCliente=?");
+                $r->execute(array($cpf));
+                if($r->rowCount()>0) {
+                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($linhas as $l) {
+                        $precoInvestimento = number_format($l['precoInvestimento'],2);
+                        echo "
+                            <h4>Carteira ".$l['id']."</h4>
+                            <p>".$l['nome']."</p>
+                            <p><b>Investimento:</b> R$ ".$precoInvestimento."</p>
+                            <h5>Ações:</h5>
+                        ";
+                        
+                        $r = $db->prepare("SELECT * FROM carteira_acao WHERE idCarteira=?");
+                        $r->execute(array($l['id']));
+                        $linhas2 = $r->fetchAll(PDO::FETCH_ASSOC);
+                        foreach($linhas2 as $l2) {
+                            $percentual = $l2['percentual'];
+                            $r = $db->prepare("SELECT * FROM acao WHERE id=?");
+                            $r->execute(array($l2['idAcao']));
+                            $linhas3 = $r->fetchAll(PDO::FETCH_ASSOC);
+                            foreach($linhas3 as $l3) {$nomeAcao = $l3['nome']; $preco = number_format($l3['preco'],2);}
+                        }
+
+                        // ERRO AO CALCULAR AQUI!
+                        $precoPercentual = ($precoInvestimento/100)*$percentual;
+                        echo "
+                            <p><b>".$l3['nome']."(R$ ".$preco."):</b> ".$percentual."% (R$ ".$precoPercentual.")</p>
+                            <hr>
+                        ";
+                    }
+                } else {echo "<p class='text-muted'>Não há carteiras cadastradas</p>";}
+            ?>
         </div>
     </div>
 
