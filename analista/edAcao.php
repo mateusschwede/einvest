@@ -7,6 +7,7 @@
     $r->execute(array(base64_decode($_GET['id'])));
     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
     foreach($linhas as $l) {
+        $codigo = $l['codigo'];
         $cnpj = $l['cnpj'];
         $nome = $l['nome'];
         $atividade = $l['atividade'];
@@ -14,16 +15,21 @@
         $preco = number_format($l['preco'],2);
     }
 
-    if ( (!empty($_GET['idVelho'])) and (!empty($_POST['nCnpj'])) and (!empty($_POST['nNome'])) and (!empty($_POST['nAtividade'])) and (!empty($_POST['nSetor'])) and (!empty($_POST['nPreco'])) ) {
+    if ( (!empty($_GET['idVelho'])) and (!empty($_POST['nCodigo'])) and (!empty($_POST['nCnpj'])) and (!empty($_POST['nNome'])) and (!empty($_POST['nAtividade'])) and (!empty($_POST['nSetor'])) and (!empty($_POST['nPreco'])) ) {
         $r = $db->prepare("SELECT idAcao FROM carteira_acao WHERE idAcao=?");
         $r->execute(array($_GET['idVelho']));
 
         if ($r->rowCount()==0) {
-            $pregao = number_format($_POST['nPreco'],2);
-            $r = $db->prepare("UPDATE acao SET cnpj=?,nome=?,atividade=?,setor=?,preco=? WHERE id=?");
-            $r->execute(array($_POST['nCnpj'],$_POST['nNome'],$_POST['nAtividade'],$_POST['nSetor'],$pregao,$_GET['idVelho']));
-            $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Ação ".$_GET['idVelho']." atualizada!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
-            header("location: acoes.php");
+            $r = $db->prepare("SELECT cnpj FROM acao WHERE (cnpj=? OR codigo=?) AND id!=?");
+            $r->execute(array($_POST['nCnpj'],$_POST['nCodigo'],$_GET['idVelho']));
+            
+            if($r->rowCount()==0) {
+                $pregao = number_format($_POST['nPreco'],2);
+                $r = $db->prepare("UPDATE acao SET codigo=?,cnpj=?,nome=?,atividade=?,setor=?,preco=? WHERE id=?");
+                $r->execute(array($_POST['nCodigo'],$_POST['nCnpj'],$_POST['nNome'],$_POST['nAtividade'],$_POST['nSetor'],$pregao,$_GET['idVelho']));
+                $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Ação ".$_GET['idVelho']." atualizada!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+                header("location: acoes.php");
+            } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Cnpj ou código já existente!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: acoes.php");}
         } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Ação cadastrada em carteira!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: acoes.php");}
 
     }
@@ -66,6 +72,9 @@
         <div class="col-sm-12">
             <h1>Editar ação <?=base64_decode($_GET['id'])?></h1>
             <form action="edAcao.php?idVelho=<?=base64_decode($_GET['id'])?>" method="post">
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="código (xxxx9)" required name="nCodigo" pattern="[a-z]{4}\d{1}" style="text-transform: lowercase;" value="<?=$codigo?>">
+                </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="cnpj (somente números)" required name="nCnpj" pattern="\d{12}" value="<?=$cnpj?>">
                 </div>

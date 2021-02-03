@@ -19,6 +19,7 @@ INSERT INTO cliente(cpf,nome,email,celular,senha) VALUES ("00000000000","cliente
 
 CREATE TABLE acao (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(5) NOT NULL,
     cnpj VARCHAR(12) NOT NULL,
     nome VARCHAR(60) NOT NULL,
     atividade VARCHAR(60) NOT NULL,

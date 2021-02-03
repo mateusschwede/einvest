@@ -3,14 +3,14 @@
     session_start();
     if((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
 
-    if( (!empty($_POST['cnpj'])) and (!empty($_POST['nome'])) and (!empty($_POST['atividade'])) and (!empty($_POST['setor'])) and (!empty($_POST['preco'])) ) {
-        $r = $db->prepare("SELECT id FROM acao WHERE cnpj=?");
-        $r->execute(array($_POST['cnpj']));;
+    if( (!empty($_POST['codigo'])) and (!empty($_POST['cnpj'])) and (!empty($_POST['nome'])) and (!empty($_POST['atividade'])) and (!empty($_POST['setor'])) and (!empty($_POST['preco'])) ) {
+        $r = $db->prepare("SELECT id FROM acao WHERE cnpj=? OR codigo=?");
+        $r->execute(array($_POST['cnpj'],$_POST['codigo']));;
 
         if($r->rowCount()==0) {
             $pregao = number_format($_POST['preco'],2);
-            $r = $db->prepare("INSERT INTO acao(cnpj,nome,atividade,setor,preco) VALUES (?,?,?,?,?)");
-            $r->execute(array($_POST['cnpj'],$_POST['nome'],$_POST['atividade'],$_POST['setor'],$pregao));
+            $r = $db->prepare("INSERT INTO acao(codigo,cnpj,nome,atividade,setor,preco) VALUES (?,?,?,?,?)");
+            $r->execute(array($_POST['codigo'],$_POST['cnpj'],$_POST['nome'],$_POST['atividade'],$_POST['setor'],$pregao));
             $_SESSION['msg'] = "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>Ação Cnpj ".$_POST['cnpj']." adicionada!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
             header("location: acoes.php");
         } else {$_SESSION['msg'] = "<br><div class='alert alert-danger alert-dismissible fade show' role='alert'>Ação já existente!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"; header("location: acoes.php");}
@@ -54,6 +54,9 @@
         <div class="col-sm-12">
             <h1>Nova ação</h1>
             <form action="addAcao.php" method="post">
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="código (xxxx9)" required name="codigo" pattern="[a-z]{4}\d{1}" style="text-transform: lowercase;">
+                </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="cnpj (somente números)" required name="cnpj" pattern="\d{12}">
                 </div>

@@ -49,9 +49,9 @@
                     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                     foreach($linhas as $l) {
                         echo "
-                            <p><b>Cód:</b> ".$l['id']."</p>
+                            <p><b>".$l['id']."- ".$l['nome']."</b></p>
+                            <p><b>Cód:</b> ".strtoupper($l['codigo'])."</p>
                             <p><b>Cnpj:</b> ".$l['cnpj']."</p>
-                            <p><b>Nome:</b> ".$l['nome']."</p>
                             <p><b>Atividade:</b> ".$l['atividade']."</p>
                             <p><b>Setor:</b> ".$l['setor']."</p>
                             <p><b>Pregão:</b> R$ ".number_format($l['preco'],2,'.','')."</p>
