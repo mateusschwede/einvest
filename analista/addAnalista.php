@@ -1,7 +1,6 @@
 <?php
     require_once "../conect.php";
     session_start();
-    $_SESSION['msg'] = null;
 
     if((!empty($_POST['nome'])) and (!empty($_POST['termo'])) and (!empty($_POST['senha']))) {
         $r = $db->prepare("SELECT * FROM analista WHERE nome=? AND senha=?");
@@ -45,7 +44,6 @@
                 <button type="button" class="btn btn-danger" onclick="window.location.href='../index.php'">Voltar</button>
                 <button type="submit" class="btn btn-success">Adicionar</button>
             </form>
-            <?php if($_SESSION['msg']!=null){echo $_SESSION['msg']; $_SESSION['msg']=null;}?>
         </div>
     </div>
 

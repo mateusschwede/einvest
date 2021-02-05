@@ -1,5 +1,5 @@
 <?php
-    require_once "conect.php";
+    require_once "conexao.php";
     $msg = null;
 
     if((!empty($_POST['nome'])) and (!empty($_POST['senha']))) {
@@ -15,7 +15,7 @@
             $_SESSION['msg'] = null;
             header("location: analista/index.php");
         } else if($r2->rowCount()>0) {
-            $r = $db->prepare("SELECT email FROM cliente WHERE nome=? AND senha=?");
+            $r = $db->prepare("SELECT email FROM cliente WHERE nome=? AND senha=? AND ativo=1");
             $r->execute(array($_POST['nome'],$_POST['senha']));
             $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
             foreach($linhas as $l) {$email = $l['email'];}

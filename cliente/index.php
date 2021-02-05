@@ -72,11 +72,10 @@
                             $linhas3 = $r->fetchAll(PDO::FETCH_ASSOC);
                             foreach($linhas3 as $l3) {$nomeAcao = $l3['nome']; $preco = number_format($l3['preco'],2);}
                         }
-
-                        // ERRO AO CALCULAR AQUI!
-                        $precoPercentual = ($precoInvestimento/100)*$percentual;
                         echo "
-                            <p><b>".$l3['nome']."(R$ ".$preco."):</b> ".$percentual."% (R$ ".$precoPercentual.")</p>
+                            <p><b>(".strtoupper($l3['codigo']).") ".$l3['nome']."(R$ ".$preco."):</b> ".$percentual."% (precoPercentual aqui)</p>
+                            <h6>Recomendação de compra aqui</h6>
+                            <p>Botão Investir aqui</p>
                             <hr>
                         ";
                     }
